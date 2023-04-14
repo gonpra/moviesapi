@@ -10,7 +10,7 @@ public class FilmeInputEdit
     /// <summary>
     /// Gets or sets the titulo of the filme.
     /// </summary>
-    /// <example>John Wick: Chapter 4</example>
+    /// <example>John Wick: Baba Yaga</example>
     [Required]
     public string Titulo { get; set; } = null!;
     

@@ -14,7 +14,7 @@ public class FilmeDto
     /// <summary>
     /// Gets or sets the title of the filme.
     /// </summary>
-    /// <example>John Wick: Chapter 4</example>
+    /// <example>John Wick: Baba Yaga</example>
     public string Titulo { get; set; } = null!;
     
     /// <summary>

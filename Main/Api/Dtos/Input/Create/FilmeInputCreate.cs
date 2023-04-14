@@ -10,7 +10,7 @@ public class FilmeInputCreate
     /// <summary>
     /// Filme's titulo
     /// </summary>
-    /// <example>John Wick: Chapter 4</example>
+    /// <example>John Wick: Baba Yaga</example>
     [Required]
     public string Titulo { get; set; } = null!;
     
