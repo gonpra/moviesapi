@@ -1,4 +1,4 @@
-namespace FilmesApi.Main.Core.Pagination;
+namespace MoviesApi.Main.Core.Pagination;
 
 /// <summary>
 /// Represents a Pageable object that contains pagination information.

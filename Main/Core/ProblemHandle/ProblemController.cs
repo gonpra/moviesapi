@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 
-namespace FilmesApi.Main.Core.ProblemHandle;
+namespace MoviesApi.Main.Core.ProblemHandle;
 
 #pragma warning disable 1591
 public class ProblemController : Controller
