@@ -1,10 +1,10 @@
 using AutoMapper;
-using FilmesApi.Main.Api.Dtos;
-using FilmesApi.Main.Api.Dtos.Input.Create;
-using FilmesApi.Main.Api.Dtos.Input.Edit;
-using FilmesApi.Main.Domain.Models;
+using MoviesApi.Main.Api.Dtos;
+using MoviesApi.Main.Api.Dtos.Input.Create;
+using MoviesApi.Main.Api.Dtos.Input.Edit;
+using MoviesApi.Main.Domain.Models;
 
-namespace FilmesApi.Main.Core.AutoMapper;
+namespace MoviesApi.Main.Core.AutoMapper;
 
 /// <summary>
 /// A class for configuring AutoMapper and creating an instance of it.
@@ -19,10 +19,10 @@ public class MapperConfig
     {
         var config = new MapperConfiguration(cfg =>
         {
-            cfg.CreateMap<FilmeInputCreate, Filme>();
-            cfg.CreateMap<Filme, FilmeDto>();
-            cfg.CreateMap<FilmeInputEdit, Filme>();
-            cfg.CreateMap<Filme, Filme>();
+            cfg.CreateMap<MovieInputCreate, Movie>();
+            cfg.CreateMap<Movie, MovieDto>();
+            cfg.CreateMap<MovieInputEdit, Movie>();
+            cfg.CreateMap<Movie, Movie>();
         });
         
         var mapper = new Mapper(config);

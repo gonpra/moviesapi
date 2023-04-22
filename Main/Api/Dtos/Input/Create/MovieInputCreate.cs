@@ -1,31 +1,31 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace FilmesApi.Main.Api.Dtos.Input.Create;
+namespace MoviesApi.Main.Api.Dtos.Input.Create;
 
 /// <summary>
-/// Input for filme creation
+/// Input for Movie creation
 /// </summary>
-public class FilmeInputCreate
+public class MovieInputCreate
 {
     /// <summary>
-    /// Filme's titulo
+    /// Movie's title
     /// </summary>
     /// <example>John Wick: Baba Yaga</example>
     [Required]
-    public string Titulo { get; set; } = null!;
+    public string Title { get; set; } = null!;
     
     /// <summary>
-    /// Filme's genero
+    /// Movie's genre
     /// </summary>
     /// <example>Ação</example>
     [Required]
-    public string Genero { get; set; } = null!;
+    public string Genre { get; set; } = null!;
     
     /// <summary>
-    /// Filme's duracao
+    /// Movie's duration
     /// </summary>
     /// <example>280</example>
     [Required]
     [Range(70,600)]
-    public int Duracao { get; set; }
+    public int Duration { get; set; }
 }
