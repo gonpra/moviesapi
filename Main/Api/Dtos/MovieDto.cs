@@ -1,3 +1,5 @@
+using System;
+
 namespace MoviesApi.Main.Api.Dtos;
 
 /// <summary>
