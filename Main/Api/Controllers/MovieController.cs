@@ -1,5 +1,9 @@
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using MoviesApi.Main.Api.Dtos;
 using MoviesApi.Main.Api.Dtos.Filter;
 using MoviesApi.Main.Api.Dtos.Input.Create;
