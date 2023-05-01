@@ -1,24 +1,8 @@
-# Simple CRUD API with .NET 7
-This is a simple CRUD (Create, Read, Update, Delete) API created using .NET 7. It allows you to perform basic CRUD operations in memory or on a database using HTTP requests.
-
-## Technologies Used
-This API was created using the following technologies:
-
-.NET 7
-
-ASP.NET Core
-
-### Optional Technologies
-
-Entity Framework Core
-
-Postgresql
-
-Mongodb
-
-## Getting Started
-To use this API, you'll need to have .NET 7 installed on your machine
+## Getting Started with Postgresql branch
+To use the postgresql branch, you'll need to have .NET 7 and Postgresql v13 installed on your system
 
 1. Clone this repository to your local machine
-2. Build and run the project using ```dotnet run```
-
+2. Install the Entity Framework cli tool using ```dotnet tool install --global dotnet-ef```
+3. Create a database named 'movies' on your postgresql instance
+4. Update the database using the existing migrations with ```dotnet ef database update```
+5. Build and run the project using ```dotnet run```
