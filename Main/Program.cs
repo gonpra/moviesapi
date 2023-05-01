@@ -1,5 +1,11 @@
 using System.Reflection;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+using MoviesApi.Main.Api.Services;
+using MoviesApi.Main.Api.Services.Implementation;
+using MoviesApi.Main.Core.Database;
+using MoviesApi.Main.Domain.Repositories;
+using MoviesApi.Main.Domain.Repositories.Implementation;
 
 // BUILDER CONFIG
 var builder = WebApplication.CreateBuilder(args);
@@ -8,6 +14,13 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddDbContext<DataContext>(options =>
+{
+    options.UseNpgsql(builder.Configuration.GetConnectionString("WebApiDatabase"));
+});
+builder.Services.AddScoped<IMovieRepository, MovieRepository>();
+builder.Services.AddScoped<IMovieService, MovieService>();
+
 builder.Services.AddSwaggerGen(options =>
 {
     options.SwaggerDoc("v1", new OpenApiInfo

@@ -19,15 +19,15 @@ namespace MoviesApi.Main.Api.Controllers;
 public class MovieController : ControllerBase
 {
     private readonly Mapper _mapper;
-    private readonly MovieService _movieService;
+    private readonly IMovieService _movieService;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="MovieController"/> class.
     /// </summary>
-    public MovieController()
+    public MovieController(IMovieService movieService)
     {
         _mapper = MapperConfig.InitAutoMapper();
-        _movieService = new MovieService();
+        _movieService = movieService;
     }
     
     /// <summary>
@@ -50,7 +50,7 @@ public class MovieController : ControllerBase
         return CreatedAtAction(
             nameof(Get),
             new { id = content.Id },
-            content
+            _mapper.Map<Movie, MovieDto>(content)
         );
     }
 
@@ -66,9 +66,12 @@ public class MovieController : ControllerBase
     [Produces("application/json")]
     public async Task<ActionResult<Pagination<List<MovieDto>>>> List([FromQuery] MovieFilter filter, [FromQuery] Pageable pageable)
     {
-        var content = await _movieService.List(filter, pageable);
+        var content = await _movieService.List(filter);
         
-        return Ok(content);
+        var dto = content.Select(movie => _mapper.Map<Movie, MovieDto>(movie)).ToList();
+
+        var filteredContent = Pagination<MovieDto>.Paginate(dto, pageable);
+        return Ok(new Pagination<List<MovieDto>>(filteredContent, pageable, content.Count));
     }    
 
     /// <summary>
@@ -90,7 +93,7 @@ public class MovieController : ControllerBase
             return NotFound();
         }
         
-        return Ok(content);
+        return Ok(_mapper.Map<Movie, MovieDto>(content));
     }
 
     /// <summary>
@@ -110,13 +113,12 @@ public class MovieController : ControllerBase
         var input = _mapper.Map<MovieInputEdit, Movie>(inputRaw);
 
         var content = await _movieService.Update(id, input);
-        
         if (content is null)
         {
             return NotFound();
         }
 
-        return Ok(content);
+        return Ok(_mapper.Map<Movie, MovieDto>(content));
     }
    
     /// <summary>

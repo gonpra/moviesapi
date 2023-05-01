@@ -10,8 +10,8 @@ public class Pageable
     /// </summary>
     public Pageable()
     {
-        this.Page = 1;
-        this.Size = 10;
+        Page = 1;
+        Size = 10;
     }
 
     /// <summary>

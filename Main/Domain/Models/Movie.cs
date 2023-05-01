@@ -1,15 +1,12 @@
+using MoviesApi.Main.Domain.Repositories;
+
 namespace MoviesApi.Main.Domain.Models;
 
 /// <summary>
 /// Represents a movie object.
 /// </summary>
-public class Movie
+public class Movie : BaseEntity
 {
-    /// <summary>
-    /// Gets or sets the unique identifier of the movie.
-    /// </summary>
-    public Guid Id { get; set; }
-
     /// <summary>
     /// Gets or sets the title of the movie.
     /// </summary>
