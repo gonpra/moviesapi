@@ -1,5 +1,11 @@
 using System.Reflection;
 using Microsoft.OpenApi.Models;
+using MongoDB.Bson;
+using MoviesApi.Main.Api.Services;
+using MoviesApi.Main.Api.Services.Implementation;
+using MoviesApi.Main.Core.Database;
+using MoviesApi.Main.Domain.Repositories;
+using MoviesApi.Main.Domain.Repositories.Implementation;
 
 // BUILDER CONFIG
 var builder = WebApplication.CreateBuilder(args);
@@ -19,14 +25,22 @@ builder.Services.AddSwaggerGen(options =>
 
     String xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
     options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
+    
+    // Treat ObjectId as a String in Swagger
+    options.MapType<ObjectId>(() => new OpenApiSchema { Type = "string" });
 });
 
 if (builder.Environment.IsDevelopment())
 {
     builder.Services.AddProblemDetails(options =>
         options.CustomizeProblemDetails = ctx =>
-            ctx.ProblemDetails.Extensions.Add("nodeId", Environment.MachineName));    
+            ctx.ProblemDetails.Extensions.Add("nodeId", Environment.MachineName));
 }
+
+builder.Services.Configure<DataContext>(builder.Configuration.GetSection("MongoDatabase"));
+
+builder.Services.AddScoped<IMovieService, MovieService>();
+builder.Services.AddScoped<IMovieRepository, MovieRepository>();
 
 // APP CONFIG
 
@@ -42,7 +56,7 @@ if (app.Environment.IsDevelopment())
         options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
         options.RoutePrefix = string.Empty;
     });
-    
+
 }
 
 app.UseStatusCodePages();

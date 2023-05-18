@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using AutoMapper;
+using MongoDB.Bson;
 using MoviesApi.Main.Api.Dtos;
 using MoviesApi.Main.Api.Dtos.Filter;
 using MoviesApi.Main.Api.Dtos.Input.Create;
@@ -19,17 +20,17 @@ namespace MoviesApi.Main.Api.Controllers;
 public class MovieController : ControllerBase
 {
     private readonly Mapper _mapper;
-    private readonly MovieService _movieService;
+    private readonly IMovieService _movieService;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="MovieController"/> class.
     /// </summary>
-    public MovieController()
+    public MovieController(IMovieService movieService)
     {
         _mapper = MapperConfig.InitAutoMapper();
-        _movieService = new MovieService();
+        _movieService = movieService;
     }
-    
+
     /// <summary>
     /// Creates a new Movie object.
     /// </summary>
@@ -46,11 +47,11 @@ public class MovieController : ControllerBase
     public async Task<ActionResult<MovieDto>> Create([FromBody] MovieInputCreate input)
     {
         var content = await _movieService.Create(_mapper.Map<MovieInputCreate, Movie>(input));
-        
+
         return CreatedAtAction(
             nameof(Get),
             new { id = content.Id },
-            content
+            _mapper.Map<Movie, MovieDto>(content)
         );
     }
 
@@ -66,10 +67,13 @@ public class MovieController : ControllerBase
     [Produces("application/json")]
     public async Task<ActionResult<Pagination<List<MovieDto>>>> List([FromQuery] MovieFilter filter, [FromQuery] Pageable pageable)
     {
-        var content = await _movieService.List(filter, pageable);
-        
-        return Ok(content);
-    }    
+        var content = await _movieService.List(filter);
+
+        var dto = content.Select(movie => _mapper.Map<Movie, MovieDto>(movie)).ToList();
+
+        var filteredContent = Pagination<MovieDto>.Paginate(dto, pageable);
+        return Ok(new Pagination<List<MovieDto>>(filteredContent, pageable, content.Count));
+    }
 
     /// <summary>
     /// Gets the Movie object with the specified ID.
@@ -81,7 +85,7 @@ public class MovieController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [Produces("application/json")]
-    public async Task<ActionResult<MovieDto?>> Get([FromRoute] Guid id)
+    public async Task<ActionResult<MovieDto?>> Get([FromRoute] ObjectId id)
     {
         var content = await _movieService.Get(id);
 
@@ -89,8 +93,8 @@ public class MovieController : ControllerBase
         {
             return NotFound();
         }
-        
-        return Ok(content);
+
+        return Ok(_mapper.Map<Movie, MovieDto>(content));
     }
 
     /// <summary>
@@ -104,21 +108,21 @@ public class MovieController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [Produces("application/json")]
-    public async Task<ActionResult<MovieDto?>> Update([FromRoute] Guid id, [FromBody] MovieInputEdit inputRaw)
+    public async Task<ActionResult<MovieDto?>> Update([FromRoute] ObjectId id, [FromBody] MovieInputEdit inputRaw)
     {
         // Convert 'MovieInputEdit' object to a 'Movie' object
         var input = _mapper.Map<MovieInputEdit, Movie>(inputRaw);
 
         var content = await _movieService.Update(id, input);
-        
+
         if (content is null)
         {
             return NotFound();
         }
 
-        return Ok(content);
+        return Ok(_mapper.Map<Movie, MovieDto>(content));
     }
-   
+
     /// <summary>
     /// Deletes a Movie by ID.
     /// </summary>
@@ -131,11 +135,11 @@ public class MovieController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [Produces("application/json")]
-    public async Task<ActionResult> Delete([FromRoute] Guid id)
+    public async Task<ActionResult> Delete([FromRoute] ObjectId id)
     {
         var content = await _movieService.Delete(id);
-     
-        if (content is null)
+
+        if (content.ToString() is null)
         {
             return NotFound();
         }
